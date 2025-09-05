@@ -1,10 +1,12 @@
 let raindrops = [];
 let flowers = [];
+let splash = [];
+
 const flowerColors = [
   [255, 100, 100], //red
   [255, 255, 255], //white
   [255, 200, 50], //yellow
-  [255, 100, 255], //purple
+  [255, 129, 193], //pink
 ];
 
 function setup() {
@@ -13,30 +15,36 @@ function setup() {
 
 function draw() {
   background(0);
-
-  //update raindrops
+  //autonomous agent: each raindrop updates itself
   for (let i = raindrops.length - 1; i >= 0; i--) {
     let drop = raindrops[i];
-    //autonomous agent: each raindrop updates itself
     drop.update();
     if (drop.y >= drop.groundY) {
       // autonomous agent: each flower grows itself
       flowers.push(new Flower(drop.x, drop.groundY));
+      // autonomous agent: each splash creates itself
+      splash.push(new Splash(drop.x, drop.y));
       raindrops.splice(i, 1);
     } else {
       drop.show();
     }
   }
 
-  //update flowers
-  for (let f of flowers) {
-    // autonomous agent: each flower updates itself
+  // autonomous agent: each splash updates itself
+  for (let i = splash.length - 1; i >= 0; i--) {
+    splash[i].update();
+    splash[i].show();
+    if (splash[i].splashAlpha <= 0) splash.splice(i, 1);
+  }
+
+  // autonomous agent: each flower updates itself
+  for (let i = flowers.length - 1; i >= 0; i--) {
+    let f = flowers[i];
     f.update();
     f.show();
   }
 }
 
-// when w is pressed, add raindrops
 // Particle generator: pressing "w" spawns new raindrops
 function keyPressed() {
   if (key === "w" || key === "W") {
@@ -59,26 +67,52 @@ class Raindrop {
     this.noiseX = 0.015;
     this.noiseY = 0.012;
     this.groundY = groundY;
-    this.speed = random(3, 5);
-    this.size = random(5, 10);
-    // this.offset = random(TWO_PI);
+    this.speed = random(6, 10);
+    this.size = random(5, 8);
   }
 
   update() {
     // variation1: Raindrops aren’t falling perfectly straight; they sway slightly left and right using Perlin noise.
     this.y += this.speed;
-    let n = noise(
-      this.x * this.noiseX,
-      this.y * this.noiseY
-      // frameCount * 0.01
-    );
-    this.x += map(n, 0, 1, -2, 2);
+    let n = noise(this.x * this.noiseX, this.y * this.noiseY);
+    this.x += map(n, 0, 1, -1.5, 1.5);
   }
 
   show() {
-    fill(255);
+    fill(191, 244, 247);
     noStroke();
-    ellipse(this.x, this.y, this.size, this.size * 1.8);
+    triangle(
+      this.x - this.size / 2,
+      this.y,
+      this.x + this.size / 2,
+      this.y,
+      this.x,
+      this.y - this.size * 1.5
+    );
+    ellipse(this.x, this.y, this.size, this.size);
+  }
+}
+
+class Splash {
+  constructor(x, y, radius = 0) {
+    this.x = x;
+    this.y = y;
+    this.splashRadius = radius;
+    this.splashAlpha = random(150, 700);
+  }
+
+  update() {
+    // splash expands and fades
+    this.splashRadius += 2;
+    this.splashAlpha -= 10;
+  }
+
+  show() {
+    if (this.splashAlpha <= 0) return;
+    noFill();
+    stroke(212, 241, 249, this.splashAlpha);
+    strokeWeight(2);
+    ellipse(this.x, this.y, this.splashRadius, this.splashRadius / 4);
   }
 }
 
@@ -86,24 +120,24 @@ class Flower {
   constructor(x, groundY) {
     this.baseX = x;
     this.baseY = groundY;
+    this.phase = this.stemHeight >= this.targetStemHeight ? "flower" : "stem";
 
     // stem
     this.stemHeight = 0;
-    this.targetStemHeight = random(100, 300);
-    this.stemSegments = 5;
+    this.targetStemHeight = random(100, 250);
+    this.stemSegments = 6;
     this.segmentLength = 1;
     this.stemPoints = [];
     // variation3: different sway amplitude for each stem
-    this.stemSwingAmplitude = random(2, 4);
+    this.stemSwingAmplitude = random(2, 10);
     // variation3: different sway speed per stem
     this.speed = random(0.03, 0.07);
 
     // flower
     this.size = 0;
     this.maxSize = random(10, 20);
-    this.petals = floor(random(8, 9));
+    this.petals = floor(random(8, 10));
     this.color = color(...flowerColors[floor(random(flowerColors.length))]);
-    this.phase = "stem";
     this.angleOffset = random(TWO_PI);
     this.x = x;
     this.y = groundY;
@@ -111,11 +145,13 @@ class Flower {
     this.swingY = random(1, 4);
 
     this.hueOffset = random(0, 360);
-    this.hueSpeed = random(1, 2); //each flower has different hue changing speed
+    this.hueSpeed = random(1, 3); //each flower has different hue changing speed
   }
 
   update() {
-    this.stemPoints = [];
+    if (!this.stemPoints.length)
+      this.stemPoints = new Array(this.stemSegments + 1).fill({ x: 0, y: 0 });
+
     // stem growth
     if (this.stemHeight < this.targetStemHeight) {
       this.stemHeight += this.segmentLength;
@@ -126,16 +162,17 @@ class Flower {
       let t = i / this.stemSegments;
       let y = this.baseY - t * this.stemHeight;
 
-      //variation3:Bottom of the stem stays almost vertical, top swings more. Uses pow(t,3) to achieve smooth growth.
+      //variation3:Bottom of the stem stays almost vertical, top swings more. Uses pow() to achieve smooth growth.
       let wind =
         sin(frameCount * this.speed + this.angleOffset) *
         this.stemSwingAmplitude;
+      console.log(t);
+      console.log(wind);
 
       //using pow function to make the btn more stable and top swings more
-      let x = this.baseX + wind * pow(t, 3);
-      this.stemPoints.push({ x, y });
+      let x = this.baseX + wind * pow(t, 4);
+      this.stemPoints[i] = { x, y };
     }
-    console.log(this.stemPoints);
 
     // the tip of the stem
     // autonomous agent： update flower tip to follow stem tip
@@ -151,7 +188,7 @@ class Flower {
   }
 
   show() {
-    stroke(50, 150, 50);
+    stroke(135, 180, 54);
     strokeWeight(2);
     noFill();
     beginShape();
@@ -162,6 +199,7 @@ class Flower {
 
     // variation4: Each flower’s petals have slightly different number and size, creating visual diversity. ✅
     if (this.phase === "flower") {
+      push();
       colorMode(HSB, 360, 100, 100);
       noStroke();
       for (let i = 0; i < this.petals; i++) {
@@ -175,79 +213,10 @@ class Flower {
           this.size
         );
       }
-
-      colorMode(RGB);
+      pop();
+      noStroke();
       fill(this.color);
       ellipse(this.x, this.y, this.size * 1.2, this.size * 1.2);
     }
   }
 }
-
-// class Flower {
-//   constructor(x, groundY) {
-//     this.baseX = x;
-//     this.baseY = groundY;
-//     this.stemHeight = 0;
-//     this.targetStemHeight = random(80, 350);
-//     this.size = 0;
-//     this.petals = random(8, 9);
-//     this.maxSize = random(10, 20);
-//     this.color = color(...flowerColors[floor(random(flowerColors.length))]);
-//     this.phase = "stem";
-//     this.angleOffset = random(TWO_PI);
-//     this.x = x;
-//     this.y = groundY;
-//     this.swingX = random(2, 8);
-//     this.swingY = random(1, 4);
-//     this.speed = random(0.03, 0.07);
-//     this.hueOffset = random(0, 360);
-//   }
-
-//   update() {
-//     if (this.phase === "stem") {
-//       this.stemHeight += 1;
-//       if (this.stemHeight >= this.targetStemHeight) {
-//         this.phase = "flower";
-//       }
-//     } else if (this.phase === "flower") {
-//       if (this.size < this.maxSize) {
-//         this.size += 0.3;
-//       }
-
-//       // flower swing
-//       this.x =
-//         this.baseX +
-//         sin((frameCount + this.angleOffset) * this.speed) * this.swingX;
-//       this.y =
-//         this.baseY -
-//         this.stemHeight +
-//         cos((frameCount + this.angleOffset) * this.speed) * this.swingY;
-//     }
-//   }
-
-//   show() {
-//     stroke(50, 150, 50);
-//     strokeWeight(3);
-
-//     line(this.baseX, this.baseY, this.baseX, this.baseY - this.stemHeight);
-
-//     if (this.phase === "flower") {
-//       colorMode(HSB, 360, 100, 100);
-//       noStroke();
-
-//       for (let i = 0; i < this.petals; i++) {
-//         let hueShift = (frameCount * 2 + this.hueOffset) % 360;
-//         fill(hueShift, 60, 80);
-//         ellipse(
-//           this.x + cos((TWO_PI * i) / this.petals) * this.size,
-//           this.y + sin((TWO_PI * i) / this.petals) * this.size,
-//           this.size,
-//           this.size
-//         );
-//       }
-//       colorMode(RGB);
-//       fill(this.color);
-//       ellipse(this.x, this.y, this.size * 1.2, this.size * 1.2);
-//     }
-//   }
-// }
