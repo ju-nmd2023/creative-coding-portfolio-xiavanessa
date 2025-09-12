@@ -1,9 +1,6 @@
 let raindrops = [];
 let flowers = [];
 let splash = [];
-let mic, micNode;
-let micThreshold = 0.02;
-let prevMicLevel = 0;
 
 const flowerColors = [
   [255, 100, 100], //red
@@ -14,70 +11,10 @@ const flowerColors = [
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  startButton();
-}
-
-function startButton() {
-  startBtn = createButton("🎤 Start Mic");
-  startBtn.position(
-    width / 2 - startBtn.width / 2,
-    height / 2 - startBtn.height * 2
-  );
-  startBtn.style("padding", "12px 20px");
-  startBtn.style("font-size", "16px");
-  startBtn.style("border-radius", "12px");
-  startBtn.style("background-color", "#4CAF50");
-  startBtn.style("color", "white");
-  startBtn.style("border", "none");
-  startBtn.style("cursor", "pointer");
-
-  //Browsers block microphone and audio context initialization unless it’s triggered by a user gesture
-  startBtn.mousePressed(() => {
-    initMic();
-    startBtn.hide();
-  });
-  startBtn.show();
-}
-
-// need to resume the audio context cuz browser automatically pauses the audio context every time the page is refreshed
-function initMic() {
-  if (getAudioContext().state !== "running") {
-    getAudioContext().resume().then(startMic);
-  } else {
-    startMic();
-  }
-}
-
-//resetting the mic object
-function startMic() {
-  if (mic) mic.stop();
-  mic = new p5.AudioIn();
-  mic.start(
-    () => console.log("Mic started"),
-    (err) => console.error("Mic error:", err)
-  );
 }
 
 function draw() {
   background(0);
-  if (!mic || !mic.enabled) return;
-
-  if (!mic.enabled) return;
-  micLevel = mic.getLevel();
-  console.log(micLevel);
-  if (micLevel > micThreshold && prevMicLevel <= micThreshold) {
-    //random number of raindrop each time 1 to 2
-    let count = floor(random(1, 3));
-    for (let i = 0; i < count; i++) {
-      //random ground height for each raindrop
-      let groundY = height - random(150, 220);
-      let margin = width * 0.15;
-      let x = random(margin, width - margin);
-      raindrops.push(new Raindrop(x, 0, groundY));
-    }
-  }
-  prevMicLevel = micLevel;
-
   //autonomous agent: each raindrop updates itself
   for (let i = raindrops.length - 1; i >= 0; i--) {
     let drop = raindrops[i];
@@ -105,6 +42,21 @@ function draw() {
     let f = flowers[i];
     f.update();
     f.show();
+  }
+}
+
+// Particle generator: pressing "w" spawns new raindrops
+function keyPressed() {
+  if (key === "w" || key === "W") {
+    //random number of raindrop each time 2 to 4
+    let count = floor(random(2, 3));
+    for (let i = 0; i < count; i++) {
+      //random ground height for each raindrop
+      let groundY = height - random(150, 220);
+      let margin = width * 0.15;
+      let x = random(margin, width - margin);
+      raindrops.push(new Raindrop(x, 0, groundY));
+    }
   }
 }
 
@@ -217,8 +169,8 @@ class Flower {
       let wind =
         sin(frameCount * this.speed + this.angleOffset) *
         this.stemSwingAmplitude;
-      // console.log(t);
-      // console.log(wind);
+      console.log(t);
+      console.log(wind);
 
       //using pow function to make the btn more stable and top swings more
       let x = this.baseX + wind * pow(t, 4);
@@ -244,12 +196,11 @@ class Flower {
     noFill();
     beginShape();
     for (let pt of this.stemPoints) {
-      curveVertex(pt.x, pt.y);
-      curveVertex(pt.x, pt.y);
+      vertex(pt.x, pt.y);
     }
     endShape();
 
-    // variation4: Each flower’s petals have slightly different number and size, creating visual diversity.
+    // variation4: Each flower’s petals have slightly different number and size, creating visual diversity. ✅
     if (this.phase === "flower") {
       push();
       colorMode(HSB, 360, 100, 100);

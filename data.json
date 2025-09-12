@@ -1,7 +1,12 @@
 [
   {
     "file": "experiments/example2.js",
-    "name": "Something Cool",
-    "description": "Explains the what and the why. What is the main idea? What is the purpose? Describes the coding process and implementation choices and gives a high level system overview."
+    "name": "Flowers Bloom in the Sound of Rain",
+    "description": "Inspired by an old computer wallpaper, whenever the audio input exceeds a certain threshold, it rains and flowers bloom. I think it’s really beautiful."
+  },
+  {
+    "file": "experiments/example.js",
+    "name": "Variation 2",
+    "description": "Inspired by an old computer wallpaper, whenever the audio input exceeds a certain threshold, it rains and flowers bloom. I think it’s really beautiful."
   }
 ]
