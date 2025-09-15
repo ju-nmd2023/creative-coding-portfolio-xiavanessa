@@ -1,12 +1,37 @@
 [
   {
-    "file": "experiments/example2.js",
+    "file": "experiments/tree.js",
+    "name": "Firework",
+    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+  },
+  {
+    "file": "experiments/tree2.js",
+    "name": "Firework",
+    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+  },
+  {
+    "file": "experiments/flowersBloom.js",
     "name": "Flowers Bloom in the Sound of Rain",
     "description": "Inspired by an old computer wallpaper, whenever the audio input exceeds a certain threshold, it rains and flowers bloom. I think it’s really beautiful."
   },
   {
-    "file": "experiments/example.js",
-    "name": "Variation 2",
-    "description": "Inspired by an old computer wallpaper, whenever the audio input exceeds a certain threshold, it rains and flowers bloom. I think it’s really beautiful."
+    "file": "experiments/firework.js",
+    "name": "Firework",
+    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+  },
+  {
+    "file": "experiments/spiralBase.js",
+    "name": "Firework",
+    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+  },
+  {
+    "file": "experiments/spiral-1.js",
+    "name": "Firework",
+    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+  },
+  {
+    "file": "experiments/spiral-2.js",
+    "name": "Firework",
+    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
   }
 ]
