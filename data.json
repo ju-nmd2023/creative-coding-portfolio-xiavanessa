@@ -40,5 +40,11 @@
     "name": "Firework Tone",
     "description": "On the base of Firework, i used tone.js to create a simple synthesizer that plays a sound when user clicks on the canvas.",
     "needsP5Sound": false
+  },
+  {
+    "file": "experiments/tone2.js",
+    "name": "Firework Tone 2",
+    "description": "On the base of Firework, i used tone.js to create a simple synthesizer that plays a sound when user clicks on the canvas.",
+    "needsP5Sound": false
   }
 ]

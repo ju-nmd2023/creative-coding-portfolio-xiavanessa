@@ -41,9 +41,12 @@ function draw() {
     let fw = fireworkLaunchers[i];
     fw.update();
     fw.draw();
-    if (fw.exploded) {
+
+    // trigger explosion only once
+    if (fw.exploded && !fw.triggered) {
+      fw.triggered = true;
       createFirework(fw.x, fw.y, fw.hue);
-      playFireworkSound();
+      playFireworkSound(fw.hue);
       fireworkLaunchers.splice(i, 1);
     }
   }
@@ -53,9 +56,7 @@ function draw() {
     let p = particles[i];
     p.update();
     p.show();
-    if (p.isDead()) {
-      particles.splice(i, 1);
-    }
+    if (p.isDead()) particles.splice(i, 1);
   }
 }
 
@@ -67,6 +68,7 @@ class FireworkLauncher {
     this.velY = -random(10, 20);
     this.gravity = 0.2;
     this.exploded = false;
+    this.triggered = false;
     this.explosionHeight =
       y !== undefined ? y : random(height * 0.2, height * 0.6);
     this.hue = (hueBase + random(60)) % 360;
