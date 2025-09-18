@@ -36,7 +36,6 @@ function startButton() {
     initMic();
     startBtn.hide();
   });
-  startBtn.show();
 }
 
 // need to resume the audio context cuz browser automatically pauses the audio context every time the page is refreshed

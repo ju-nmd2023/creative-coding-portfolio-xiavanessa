@@ -1,37 +1,44 @@
 [
   {
     "file": "experiments/tree.js",
-    "name": "Firework",
-    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+    "name": "Digital Flower ",
+    "description": "This piece is inspired by the generative art series 3_collatz_conjecture. Each line segment’s length and position are driven by the Collatz sequence, while noise(i * xAngle, index * yAngle) introduces subtle rotations, giving the branches a natural, floral structure.",
+    "needsP5Sound": false
   },
   {
     "file": "experiments/tree2.js",
-    "name": "Firework",
-    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+    "name": "Digital Tree",
+    "description": "This piece is inspired by the generative art series 3_collatz_conjecture. Each branch grows according to the sequence values. Perlin noise introduces gentle rotations, and branches have a randomized 15% chance to split.",
+    "needsP5Sound": false
   },
   {
     "file": "experiments/flowersBloom.js",
     "name": "Flowers Bloom in the Sound of Rain",
-    "description": "Inspired by an old computer wallpaper, whenever the audio input exceeds a certain threshold, it rains and flowers bloom. I think it’s really beautiful."
+    "description": "Inspired by an old computer wallpaper, whenever the audio input exceeds a certain threshold, it rains and flowers bloom. I think it’s really beautiful.",
+    "needsP5Sound": true
   },
   {
     "file": "experiments/firework.js",
     "name": "Firework",
-    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
-  },
-  {
-    "file": "experiments/spiralBase.js",
-    "name": "Firework",
-    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch.",
+    "needsP5Sound": true
   },
   {
     "file": "experiments/spiral-1.js",
-    "name": "Firework",
-    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+    "name": "Spiral One",
+    "description": "This piece is inspired by the generative art series 5_spiral_rose. Color, brightness, saturation, radius, and the total number of particles are randomized, adding variation and visual depth.",
+    "needsP5Sound": false
   },
   {
     "file": "experiments/spiral-2.js",
-    "name": "Firework",
-    "description": "After looking at some particle art, I thought I could use particles to create a fireworks effect: when the audio input exceeds a certain volume threshold, a firework will launch."
+    "name": "Spiral Two",
+    "description": "On the base of Spiral One, I added additive blending.",
+    "needsP5Sound": false
+  },
+  {
+    "file": "experiments/tone1.js",
+    "name": "Firework Tone",
+    "description": "On the base of Firework, i used tone.js to create a simple synthesizer that plays a sound when user clicks on the canvas.",
+    "needsP5Sound": false
   }
 ]

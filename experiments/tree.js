@@ -16,7 +16,7 @@ function collatz(n) {
 
 function draw() {
   len = 20;
-  if (i < 500) {
+  if (i < 400) {
     let sequence = [];
     let n = i;
     do {
@@ -41,7 +41,7 @@ function draw() {
       rotate(dynamicAngle);
 
       // Gradually decrease stroke weight toward the top
-      let strokeW = map(index, 0, sequence.length, 2, 1.5); // 2 at bottom, 1.5 at top
+      let strokeW = map(index, 0, sequence.length, 2, 5.5); // 2 at bottom, 1.5 at top
       strokeWeight(strokeW);
 
       let hueVal = map(index, 0, sequence.length, 30, 120);

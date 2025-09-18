@@ -38,12 +38,14 @@ function goToExperiment(index) {
   p5script.defer = true;
   bodyElement.appendChild(p5script);
 
-  const p5soundScript = document.createElement("script");
-  p5soundScript.type = "text/javascript";
-  p5soundScript.src =
-    "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js";
-  p5soundScript.defer = true;
-  bodyElement.appendChild(p5soundScript);
+  if (experiment.needsP5Sound) {
+    const p5soundScript = document.createElement("script");
+    p5soundScript.type = "text/javascript";
+    p5soundScript.src =
+      "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js";
+    p5soundScript.defer = true;
+    bodyElement.appendChild(p5soundScript);
+  }
 
   const toneScript = document.createElement("script");
   toneScript.type = "text/javascript";
